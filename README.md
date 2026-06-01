@@ -93,7 +93,7 @@ Running the script produces `stage5_out/` containing:
              AI-Assisted React Development: An Empirical Study},
   author  = {Sharma, Somil},
   year    = {2026},
-  url     = {[ZENODO_URL]}
+  url     = {https://doi.org/10.5281/zenodo.20482307}
 }
 ```
 
