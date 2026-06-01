@@ -1,7 +1,7 @@
 # Replication Materials — "Accessibility and Semantic Quality Regressions in AI-Assisted React Development"
 
-> Somil Sharma · Keychain / Woolf University · 2026
-> Preprint: [Zenodo DOI] · arXiv: [arXiv ID] (pending)
+> Somil Sharma · 2026
+> Preprint: [Zenodo DOI](https://doi.org/10.5281/zenodo.20482307) · arXiv: [arXiv ID] (pending)
 
 ---
 
