@@ -1,0 +1,5 @@
+covariate,treated_mean_pre,control_mean_pre,std_diff_pre,treated_mean_post,control_mean_post,std_diff_post
+history_months,80.364,60.055,0.734,79.607,75.331,0.151
+tsx_file_count,209.908,159.899,0.33,182.52,207.532,0.136
+contributor_count,59.923,24.291,1.097,52.06,50.617,0.042
+commit_frequency,4240.658,1051.027,0.587,1858.908,1822.754,0.009
