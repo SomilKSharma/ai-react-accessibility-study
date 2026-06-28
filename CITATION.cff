@@ -7,8 +7,6 @@ authors:
     family-names: Sharma
     email: iamsomilsharma@gmail.com
     affiliation: "Independent Researcher, Gurugram, India"
-    # TODO: add ORCID once available
-    orcid: "https://orcid.org/0000-0000-0000-0000"
 # Zenodo concept DOI — resolves to the latest archived version.
 doi: "10.5281/zenodo.20994931"
 license: MIT
