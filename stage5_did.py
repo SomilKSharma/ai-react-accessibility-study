@@ -14,6 +14,7 @@ Outputs:
   table_robustness.csv        - 5 robustness specifications
 """
 
+import argparse
 import sqlite3
 import os
 import sys
@@ -31,8 +32,11 @@ import matplotlib.pyplot as plt
 # ── Config ────────────────────────────────────────────────────────────────────
 
 DB_PATH = "repos.db"
+DATA_DIR = Path("data")
 OUT_DIR = Path("stage5_out")
+FIG_DIR = Path("figures")
 OUT_DIR.mkdir(exist_ok=True)
+FIG_DIR.mkdir(exist_ok=True)
 
 INCLUSION_MIN_MONTHS = 12
 INCLUSION_MIN_RENDERABLE = 100
@@ -544,16 +548,12 @@ def run_event_study(df: pd.DataFrame, outcome: str,
 
 # ── Per-rule heterogeneity (RQ3) ──────────────────────────────────────────────
 
-def build_category_outcomes(conn: sqlite3.Connection, panel: pd.DataFrame) -> pd.DataFrame:
+def build_category_outcomes(detail: pd.DataFrame, panel: pd.DataFrame) -> pd.DataFrame:
     """
     For each category, compute violations_per_renderable_file per (repo, month).
     Merge onto the panel and return panel + 3 new outcome columns.
+    `detail` has columns [snapshot_id, violation_id] (from the DB or data/csv).
     """
-    detail = pd.read_sql_query("""
-        SELECT d.snapshot_id, d.violation_id
-        FROM axe_violations_detail d
-    """, conn)
-
     snap_meta = panel[["snapshot_id", "repo_id", "snapshot_month", "renderable_count"]].drop_duplicates()
     detail = detail.merge(snap_meta, on="snapshot_id", how="inner")
 
@@ -609,16 +609,42 @@ def fmt_row(r: dict) -> str:
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description="Stage 5 — DiD estimation (mean effects).")
+    ap.add_argument("--db", nargs="?", const=DB_PATH, default=None,
+                    help="Rebuild the panel + tables from the full SQLite DB "
+                         "(default: repos.db). repos.db is archived on Zenodo. "
+                         "Without --db, runs from the shipped panel.csv + data/ CSVs.")
+    ap.add_argument("--panel", default="panel.csv",
+                    help="Pre-built panel CSV to analyse when --db is absent "
+                         "(default: panel.csv at repo root).")
+    ap.add_argument("--data-dir", default=str(DATA_DIR),
+                    help="Directory with psm_diagnostics.csv and "
+                         "axe_violations_detail.csv (default: data/).")
+    args = ap.parse_args()
+    data_dir = Path(args.data_dir)
+
     print("Stage 5 — DiD estimation")
-    print(f"  DB:      {os.path.abspath(DB_PATH)}")
+    if args.db:
+        print(f"  Source:  DB {os.path.abspath(args.db)}")
+    else:
+        print(f"  Source:  panel {os.path.abspath(args.panel)} + {data_dir}/")
     print(f"  Output:  {OUT_DIR.resolve()}")
     print()
 
-    conn = sqlite3.connect(DB_PATH)
-
-    # 1. Panel
-    print("Building panel …")
-    panel = build_panel(conn)
+    # 1. Panel + supporting tables, from DB or from the shipped CSVs.
+    if args.db:
+        conn = sqlite3.connect(args.db)
+        print("Building panel from DB …")
+        panel = build_panel(conn)
+        psm = pd.read_sql_query("SELECT * FROM psm_diagnostics", conn)
+        detail = pd.read_sql_query(
+            "SELECT snapshot_id, violation_id FROM axe_violations_detail", conn)
+        conn.close()
+    else:
+        print("Loading shipped panel.csv …")
+        panel = pd.read_csv(args.panel)
+        psm = pd.read_csv(data_dir / "psm_diagnostics.csv")
+        detail = pd.read_csv(data_dir / "axe_violations_detail.csv")
     panel.to_csv(OUT_DIR / "panel.csv", index=False)
     n_repos = panel["repo_id"].nunique()
     n_treated = panel[panel["is_treated"] == 1]["repo_id"].nunique()
@@ -630,9 +656,6 @@ def main() -> None:
     print(f"  Treated POST months: {((panel.is_treated == 1) & (panel.is_post == 1)).sum()}")
     print(f"  Control synthetic POST months: {((panel.is_treated == 0) & (panel.is_post == 1)).sum()}")
     print()
-
-    # 2. PSM balance
-    psm = pd.read_sql_query("SELECT * FROM psm_diagnostics", conn)
 
     # 3. Primary DiD — three outcomes (v3.1 Amendment 3)
     print("Primary DiD …")
@@ -667,14 +690,14 @@ def main() -> None:
 
     plot_event_study(
         es_axe[es_axe["k"] <= -1],
-        OUT_DIR / "fig1_parallel_trends.png",
+        FIG_DIR / "figure1_pretrend_event_study.png",
         title="Pre-trend test — axe violations per renderable component",
         k_range=(EVENT_K_MIN, -1),
         ylabel="β_k (vs k=-1)",
     )
     plot_event_study(
         es_axe,
-        OUT_DIR / "fig2_dynamic_did.png",
+        FIG_DIR / "figure2_dynamic_did_event_study.png",
         title="Dynamic DiD — axe violations per renderable component",
         ylabel="β_k (vs k=-1)",
     )
@@ -697,7 +720,7 @@ def main() -> None:
 
     # 5. Heterogeneity — RQ3
     print("Heterogeneity (RQ3) …")
-    panel_cat = build_category_outcomes(conn, panel)
+    panel_cat = build_category_outcomes(detail, panel)
     het_rows = []
     for cat in CATEGORY_RULES:
         col = f"cat_{cat}_per_file"
@@ -835,8 +858,6 @@ def main() -> None:
     print()
     print(f"Stage 5 complete. β_axe_renderable = {br:+.5f} (p={primary[1].get('p', float('nan')):.4f}), "
           f"β_ast = {bs_ast:+.5f} (p={primary[2].get('p', float('nan')):.4f}).")
-
-    conn.close()
 
 
 if __name__ == "__main__":
