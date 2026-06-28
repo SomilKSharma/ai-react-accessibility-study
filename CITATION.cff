@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this replication package, please cite the paper and the archived dataset."
+title: "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question — Replication Package"
+type: software
+authors:
+  - given-names: Somil
+    family-names: Sharma
+    email: iamsomilsharma@gmail.com
+    affiliation: "Independent Researcher, Gurugram, India"
+    # TODO: add ORCID once available
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+# TODO: replace with the canonical Zenodo CONCEPT DOI (resolves to the latest version)
+# once the record is minted. The package author will set this manually.
+doi: "CONCEPT_DOI_HERE"
+license: MIT
+repository-code: "https://github.com/SomilKSharma/ai-react-accessibility-study"
+keywords:
+  - empirical software engineering
+  - difference-in-differences
+  - clustered inference
+  - distributional treatment effects
+  - Markov chains
+  - birth-death processes
+  - AI-assisted development
+  - web accessibility
+  - null results
+preferred-citation:
+  type: article
+  title: "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question"
+  authors:
+    - given-names: Somil
+      family-names: Sharma
+      email: iamsomilsharma@gmail.com
+      affiliation: "Independent Researcher, Gurugram, India"
+  year: 2026
+  # TODO: fill journal/DOI on acceptance (submitted to Empirical Software Engineering)
+  journal: "Empirical Software Engineering (under review)"

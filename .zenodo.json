@@ -1,0 +1,23 @@
+{
+  "title": "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question — Replication Package",
+  "description": "Replication package for the merged manuscript: mean-effect DiD analysis (stage5_did.py, panel.csv), stochastic-dynamics analysis (dynamics_analysis.py over file-level diffs), and the four-rater construct-validation of the AST semantic score (validation/). repos.db (the full SQLite source database) is archived alongside this record. Code is MIT-licensed; data files (panel.csv and the derived data/ CSVs) are CC BY 4.0.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Sharma, Somil",
+      "affiliation": "Independent Researcher, Gurugram, India"
+    }
+  ],
+  "keywords": [
+    "empirical software engineering",
+    "difference-in-differences",
+    "clustered inference",
+    "distributional treatment effects",
+    "Markov chains",
+    "birth-death processes",
+    "AI-assisted development",
+    "web accessibility",
+    "null results"
+  ],
+  "access_right": "open"
+}
