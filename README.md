@@ -6,13 +6,10 @@ Clustered Software Panels, Demonstrated on the AI-Accessibility Question**
 Somil Sharma · Independent Researcher, Gurugram, India · iamsomilsharma@gmail.com
 Submitted to *Empirical Software Engineering* (Springer).
 
-> **Archive DOI:** `CONCEPT_DOI_HERE`
-> <!-- TODO(author): replace CONCEPT_DOI_HERE with the canonical Zenodo *concept*
-> DOI (resolves to the latest version) once the record is minted. The repo
-> previously linked zenodo.20482307, which was the DOI of the *superseded*
-> single-axis paper — confirm whether that record is being reused for the merged
-> package or a new record is being created, then set it here, in CITATION.cff,
-> and in the citation block below. -->
+> **Archive DOI (concept, all versions):** [10.5281/zenodo.20994931](https://doi.org/10.5281/zenodo.20994931)
+> — resolves to the latest version. This release: v2.0.0,
+> [10.5281/zenodo.20994932](https://doi.org/10.5281/zenodo.20994932).
+> (The superseded single-axis paper was archived separately at zenodo.20482307.)
 
 This package reproduces **every headline number, table, and figure** in the
 manuscript, along two axes:
@@ -239,7 +236,7 @@ The `validation/` column dictionaries are in `validation/README.md`.
   author = {Sharma, Somil},
   year   = {2026},
   note   = {Replication package},
-  doi    = {CONCEPT_DOI_HERE}
+  doi    = {10.5281/zenodo.20994931}
 }
 ```
 

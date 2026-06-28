@@ -9,9 +9,8 @@ authors:
     affiliation: "Independent Researcher, Gurugram, India"
     # TODO: add ORCID once available
     orcid: "https://orcid.org/0000-0000-0000-0000"
-# TODO: replace with the canonical Zenodo CONCEPT DOI (resolves to the latest version)
-# once the record is minted. The package author will set this manually.
-doi: "CONCEPT_DOI_HERE"
+# Zenodo concept DOI — resolves to the latest archived version.
+doi: "10.5281/zenodo.20994931"
 license: MIT
 repository-code: "https://github.com/SomilKSharma/ai-react-accessibility-study"
 keywords:
