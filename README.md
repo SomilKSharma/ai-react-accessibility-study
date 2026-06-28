@@ -191,6 +191,10 @@ follow a different convention; controls inherit their matched treated repo's dat
 One row per (repository, snapshot month, component file). This is the file-level
 source `dynamics_analysis.py` diffs across consecutive months to recover
 violation introductions (births) and removals (deaths).
+It contains the full set of 93 collected repositories; `dynamics_analysis.py`
+re-derives the 74-repository analysis panel (41 treated, 33 control) from
+`matched_pairs.csv` and `treatment_dates.csv` at run time, so the row count here
+is larger than the analysis panel by design.
 
 | Column | Type | Description |
 |---|---|---|
@@ -239,8 +243,6 @@ The `validation/` column dictionaries are in `validation/README.md`.
   doi    = {10.5281/zenodo.20994931}
 }
 ```
-
-<!-- TODO(author): set the DOI above once the Zenodo concept DOI is minted. -->
 
 ---
 
