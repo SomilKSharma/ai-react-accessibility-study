@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this replication package, please cite the paper and the archived dataset."
-title: "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question — Replication Package"
+title: "No Detectable Accessibility Regression from AI Coding-Tool Adoption: A Bounded Null from 446 React/TypeScript Repositories under Staggered Difference-in-Differences — Replication Package"
 type: software
 authors:
   - given-names: Somil
@@ -13,17 +13,18 @@ license: MIT
 repository-code: "https://github.com/SomilKSharma/ai-react-accessibility-study"
 keywords:
   - empirical software engineering
-  - difference-in-differences
-  - clustered inference
-  - distributional treatment effects
-  - Markov chains
-  - birth-death processes
   - AI-assisted development
   - web accessibility
+  - difference-in-differences
+  - staggered adoption
+  - clustered inference
+  - equivalence testing
   - null results
+  - distributional treatment effects
+  - zero-inflation
 preferred-citation:
   type: article
-  title: "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question"
+  title: "No Detectable Accessibility Regression from AI Coding-Tool Adoption: A Bounded Null from 446 React/TypeScript Repositories under Staggered Difference-in-Differences"
   authors:
     - given-names: Somil
       family-names: Sharma

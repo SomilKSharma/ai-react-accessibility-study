@@ -1,11 +1,10 @@
-# Pinned to the exact versions used to produce every number in the manuscript.
-# Python 3.12+ recommended (developed/verified on CPython 3.14).
-numpy==2.4.4
-pandas==3.0.3
-scipy==1.17.1
-statsmodels==0.14.6
-matplotlib==3.10.9
-krippendorff==0.8.2
-# transitive pins that statsmodels/pandas rely on (kept explicit for determinism)
-patsy==1.0.2
-python-dateutil==2.9.0.post0
+# Dependencies for the enriched-panel reproduction pipeline (run_all.sh).
+# Python 3.10+ recommended. All estimators are pure numpy/pandas — no scipy,
+# statsmodels, or R are required (the DiD, BJS imputation, wild-cluster
+# bootstrap, TOST, BH correction, and Markov tests are reimplemented in numpy
+# for determinism and portability).
+numpy>=1.24
+pandas>=2.0
+matplotlib>=3.7
+# Only needed to rebuild paper/merged-paper.docx from paper/merged-paper.md:
+python-docx>=1.1

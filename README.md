@@ -1,260 +1,73 @@
-# Replication Package — *When Distributional Findings Deceive*
+# No Detectable Accessibility Regression from AI Coding-Tool Adoption
 
-**When Distributional Findings Deceive: A Methodology for Dynamic Analysis of
-Clustered Software Panels, Demonstrated on the AI-Accessibility Question**
+Replication package for the manuscript:
 
-Somil Sharma · Independent Researcher, Gurugram, India · iamsomilsharma@gmail.com
-Submitted to *Empirical Software Engineering* (Springer).
+> **No Detectable Accessibility Regression from AI Coding-Tool Adoption: A Bounded Null from 446 React/TypeScript Repositories under Staggered Difference-in-Differences.**
+> Somil Sharma (Independent Researcher). Submitted to *Empirical Software Engineering*.
 
-> **Archive DOI (concept, all versions):** [10.5281/zenodo.20994931](https://doi.org/10.5281/zenodo.20994931)
-> — resolves to the latest version. This release: v2.0.0,
-> [10.5281/zenodo.20994932](https://doi.org/10.5281/zenodo.20994932).
-> (The superseded single-axis paper was archived separately at zenodo.20482307.)
+A staggered difference-in-differences study of whether adopting AI coding assistants
+(Cursor, GitHub Copilot) degrades the **source-detectable** web accessibility of
+React/TypeScript repositories. Over **446 repositories and 13,702 repo-months** (a
+propensity-matched **181-repo** subset as the primary identification panel), measured
+along four accessibility axes with a render-independent TypeScript-AST analyzer, the
+result is a **comprehensive, tightly-bounded null**: no axis shows a treatment effect
+under two-way fixed effects or a heterogeneity-robust imputation estimator, equivalence
+(TOST) testing excludes effects larger than ±5% of baseline on the dense axes, and the
+only beyond-mean signal is a modest, robust increase in month-to-month *state persistence*
+(less churn, not better or worse quality).
 
-This package reproduces **every headline number, table, and figure** in the
-manuscript, along two axes:
-
-1. **Mean effects** (Section 4) — a two-way fixed-effects difference-in-differences
-   on 74 repositories / 2,374 repo-months: `stage5_did.py` + `panel.csv`.
-2. **Dynamics** (Sections 5–6, the paper's primary methodological contribution) —
-   Markov-chain, birth–death/queueing, variance, and tail-exceedance analyses on
-   per-file month-to-month violation diffs: `dynamics_analysis.py` + the
-   file-level data in `data/`.
-
-Plus the **four-rater construct-validation** of the AST semantic score
-(Appendix D): `validation/`.
-
-Every result is deterministic: all bootstraps and simulations use a fixed seed
-(`20260625`). No fabricated numbers — if a model returns a null, it returns a null.
-
----
-
-## Quick start
+## Reproduce everything in one command
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-./reproduce.sh
+./run_all.sh
 ```
 
-`reproduce.sh` runs the mean analysis, the dynamics analysis, the figure
-generation, the construct-validation, and the supplementary reviewer analyses,
-writing all logs/tables to `results/` and the five figures to `figures/`.
-It runs **entirely from the committed data** — `repos.db` is *not* required
-(see "Data & the `repos.db` question" below).
-
-Python 3.12+ (developed and verified on CPython 3.14).
-
----
+This regenerates every table and figure from the **shipped** data in `data/` — the full
+SQLite source database (`repos.db`) is **not** required for reproduction (it is archived on
+Zenodo and only needed to rebuild the panels from scratch). All estimators are pure
+`numpy`/`pandas`; no R, scipy, or statsmodels are needed.
 
 ## Repository layout
 
 ```
-stage5_did.py            Mean-effect DiD pipeline (Section 4).            [manuscript-cited]
-dynamics_analysis.py     Markov + birth–death + tail dynamics (§5–6).    [manuscript-cited]
-dynamics_figures.py      Renders Figures 3–5 from dynamics_out/.
-build_file_diffs.py      Regenerates data/*.csv from repos.db (one-off).
-panel.csv                Repo-month panel, 2,374 rows, 74 repos (Section 4 input).
-
-data/
-  file_diffs.csv         Per-file, per-month axe rows — the dynamics input.
-  matched_pairs.csv      Rank-1 propensity-matched treated/control repo ids.
-  treatment_dates.csv    Per-repo treatment dates (for regime assignment).
-  psm_diagnostics.csv    PSM covariate balance (Table 3).
-  axe_violations_detail.csv  Per-snapshot violation ids (Table 5 heterogeneity).
-
-validation/
-  ratings.csv            Four anonymised raters' 1–5 scores + AST score (53 components).
-  components.csv         The 53 sampled components, by AST-score band.
-  analyze_raters.py      Recomputes Appendix D (α, κ, ρ, τ, monotonicity).
-  README.md              Appendix-D specifics + column dictionaries.
-
-analysis/
-  reviewer_analyses.py   Cluster-aware power curve (Table 4b), control-arm
-                         leave-out (§8.1), ρ-truncation mechanism (§5.5).
-  negcontrol_clustered.py  Negative-control repo-block bootstrap (§5.6).
-
-docs/
-  analysis-plan.md       Pre-specified analysis plan + deviation statement (Appendix B).
-
-figures/                 The five manuscript figures (committed; regenerated by reproduce.sh).
-results/                 Generated logs/tables (git-ignored; created by reproduce.sh).
-LICENSE                  MIT (code).
-LICENSE-data             CC BY 4.0 (data files).
-CITATION.cff / .zenodo.json   Citation + archive metadata.
+analysis/      analysis scripts (all paths resolve relative to the repo)
+  a11y_analyzer.js            render-free TypeScript-AST accessibility analyzer (5 axes, 100% coverage)
+  build_enriched_panel.py     build + propensity-match the panels from repos.db  (needs repos.db)
+  stage4_scale.py             measure repositories with the AST analyzer          (needs repos.db)
+  estimate_enriched.py        TWFE + BJS imputation + wild-cluster bootstrap + TOST   -> Tables 4, 4a, 4b
+  enriched_dynamics.py        zero-inflation, Markov homogeneity, persistence/spectral-gap, volatility, tail-DiD -> Tables 7, 9; Figs 1-3
+  multiplicity.py             Benjamini-Hochberg correction across axes              -> Table 5
+  fig_enriched.py             per-axis ATT forest plot                              -> Figure 7
+  size_distortion_sim.py      Monte Carlo size study (naive vs cluster-robust)      -> Figure 6
+  utilization_refutation_sim.py  refutation of the withdrawn utilization conjecture -> Figure 4
+  result2_simulation.py       zero-inflation df-degeneracy demonstration (Result 1)
+  raters_3independent.py      multi-rater construct validation                      -> Appendix D
+data/          shipped panels + result artifacts
+  enriched_panel.csv          matched primary panel (181 repos / 5,956 repo-months)
+  enriched_panel_full.csv     full robustness panel (446 repos / 13,702 repo-months)
+  enriched_matches.csv        propensity-score matched pairs
+  enriched_results_matched.csv / enriched_results_full.csv   per-axis estimates (regenerated by run_all.sh)
+  enriched_dynamics.json      dynamics battery output (regenerated by run_all.sh)
+  ratings.csv                 expert-rater scores for construct validation
+figures/       manuscript figures (PNG + PDF)
+paper/         merged-paper.md, merged-paper.docx, build_docx.py
 ```
 
-`stage5_did.py` and `dynamics_analysis.py` are kept at the repo root because the
-manuscript (Appendix C, Conclusion "Replication") cites those exact paths.
+## Data and the SQLite database
 
----
+The shipped CSVs in `data/` are sufficient to reproduce **all** reported numbers. To rebuild
+the panels from raw repository history you also need `repos.db` (the full SQLite source
+database), which is archived on Zenodo (it is large and is excluded from git via
+`.gitignore`). With `repos.db` present in the repo root:
 
-## How to run each piece
-
-All commands run from the repo root and use the shipped data by default.
-
-| Command | Reproduces | Runtime |
-|---|---|---|
-| `python stage5_did.py` | Tables 3–6 (mean DiD, Tobit, event study, heterogeneity, robustness); Figures 1–2 | seconds |
-| `python dynamics_analysis.py` | Tables 7–9 (Markov, birth–death, tail DiD), negative control | ~3–6 min (2,000-rep bootstrap) |
-| `python dynamics_figures.py` | Figures 3–5 (needs `dynamics_out/` from the previous step) | seconds |
-| `python validation/analyze_raters.py` | Appendix D / Tables D1–D2 | seconds |
-| `python analysis/reviewer_analyses.py` | Table 4b power curve; §8.1 control leave-out; §5.5 mechanism | ~3–6 min |
-| `python analysis/negcontrol_clustered.py` | §5.6 negative-control cluster bootstrap | ~3–6 min |
-
-Each analysis script accepts `--db repos.db` to rebuild from the full database
-instead of the shipped CSVs (results are bit-for-bit identical; verified across
-all 240 dynamics result values).
-
-### Fixed seeds
-
-Every stochastic step uses `numpy.random.default_rng(20260625)`:
-the dynamics block bootstrap (2,000 replicates), the power simulation
-(400 sims/effect), the negative-control bootstrap (2,000), and the rater-α
-bootstrap (2,000). Re-running yields identical numbers.
-
-### Where the five figures come from
-
-| Figure | File | Produced by |
-|---|---|---|
-| 1. Pre-trend event study | `figures/figure1_pretrend_event_study.png` | `stage5_did.py` |
-| 2. Dynamic DiD event study | `figures/figure2_dynamic_did_event_study.png` | `stage5_did.py` |
-| 3. 4-state transition matrices | `figures/figure3_transition_matrices.png` | `dynamics_figures.py` |
-| 4. Birth–death utilization | `figures/figure4_birthdeath_utilization.png` | `dynamics_figures.py` |
-| 5. Tail-exceedance by group/period | `figures/figure5_tail_exceedance.png` | `dynamics_figures.py` |
-
----
-
-## Data & the `repos.db` question
-
-The dynamics analysis operates on **per-file month-to-month diffs**, which the
-repo-month `panel.csv` cannot reconstruct. The originating source is `repos.db`
-(a ~124 MB SQLite database). Because that exceeds GitHub's 100 MB file limit, the
-package ships a **trimmed derived dataset** in `data/` carrying exactly the
-columns the analysis consumes, and `repos.db` is **archived on Zenodo**
-(see the DOI above).
-
-- **Run from the shipped data (default):** `data/file_diffs.csv` +
-  `matched_pairs.csv` + `treatment_dates.csv` reproduce `dynamics_analysis.py`'s
-  panel and deltas exactly. `panel.csv` + `data/psm_diagnostics.csv` +
-  `data/axe_violations_detail.csv` reproduce `stage5_did.py`. **No database
-  needed.**
-- **Run from `repos.db` (optional):** download it from the Zenodo record, place
-  it at the repo root, and pass `--db`:
-  ```bash
-  python stage5_did.py --db repos.db
-  python dynamics_analysis.py --db repos.db
-  ```
-- **Regenerate the trimmed data from `repos.db`:**
-  ```bash
-  python build_file_diffs.py --db repos.db --out data/
-  ```
-
-The pre/post regime and treated/control labels are **re-derived** from
-`matched_pairs` + `treatment_dates` under either source (the package deliberately
-does *not* use the DB's precomputed `snapshots.is_post`/`treatment_date`, which
-follow a different convention; controls inherit their matched treated repo's date).
-
----
-
-## `panel.csv` — column dictionary
-
-| Column | Type | Description |
-|---|---|---|
-| `snapshot_id` | int | Unique snapshot identifier |
-| `repo_id` | int | Repository identifier |
-| `full_name` | str | GitHub full name (owner/repo) |
-| `snapshot_month` | str | Month of snapshot (YYYY-MM) |
-| `commit_sha` | str | Commit hash for snapshot |
-| `commit_date` | str | Commit timestamp |
-| `component_count` | float | Total React components analyzed |
-| `renderable_count` | float | Components successfully rendered |
-| `violations_total` | float | Total axe-core violations |
-| `violations_critical` | float | Critical-severity violations |
-| `violations_serious` | float | Serious-severity violations |
-| `ast_score_mean` | float | Mean AST semantic score (0–1, right-censored at 1.0) |
-| `total_interactive` | float | Total interactive elements |
-| `deductions` | float | AST deduction count |
-| `is_treated` | int | 1 = AI-adopting repo, 0 = control |
-| `treatment_date` | str | Date of AI tool adoption (treated) or inherited synthetic date (control) |
-| `treatment_month_str` | str | Treatment month as YYYY-MM |
-| `history_months` | float | Months of commit history (covariate) |
-| `tsx_file_count` | float | TSX file count at treatment (covariate) |
-| `repo_partial` | int | 1 = repo errored mid-run but passed coverage inclusion |
-| `treatment_tier` | float | Adoption signal tier for treated repos (NULL for controls — expected) |
-| `axe_total_per_file` | float | Outcome: violations / component_count |
-| `axe_renderable_per_file` | float | Primary outcome: violations / renderable_count (NaN if renderable_count = 0) |
-| `snapshot_month_int` | int | Months since 2020-01 (integer encoding) |
-| `treatment_month_int` | int | Treatment month as integer |
-| `is_post` | int | 1 if snapshot_month >= treatment_month |
-| `relative_month` | int | snapshot_month_int − treatment_month_int |
-
-## `data/file_diffs.csv` — column dictionary
-
-One row per (repository, snapshot month, component file). This is the file-level
-source `dynamics_analysis.py` diffs across consecutive months to recover
-violation introductions (births) and removals (deaths).
-It contains the full set of 93 collected repositories; `dynamics_analysis.py`
-re-derives the 74-repository analysis panel (41 treated, 33 control) from
-`matched_pairs.csv` and `treatment_dates.csv` at run time, so the row count here
-is larger than the analysis panel by design.
-
-| Column | Type | Description |
-|---|---|---|
-| `repo_id` | int | Repository identifier (keys to `matched_pairs.csv`, `treatment_dates.csv`) |
-| `full_name` | str | GitHub full name (owner/repo) |
-| `snapshot_month` | str | Month of snapshot (YYYY-MM) |
-| `component_file` | str | Path to the component file within the repo |
-| `violations_total` | int | Combined critical + serious axe violations for that file in that month |
-| `renderable` | int | 1 if the file rendered under the headless pipeline, else 0 |
-
-The remaining `data/` CSVs are small lookups: `matched_pairs.csv`
-(`treated_repo_id`, `control_repo_id`), `treatment_dates.csv` (`repo_id`,
-`treatment_date`), `psm_diagnostics.csv` (Table 3 balance columns), and
-`axe_violations_detail.csv` (`snapshot_id`, `violation_id` for RQ3 categories).
-The `validation/` column dictionaries are in `validation/README.md`.
-
----
-
-## Headline numbers (verified reproductions)
-
-| Quantity | Value | Source script |
-|---|---|---|
-| axe_renderable DiD | β = +0.005, p = 0.776, N = 2,334, 74 clusters | `stage5_did.py` |
-| axe_total DiD | β = +0.000, p = 0.973, N = 2,374 | `stage5_did.py` |
-| ast_score OLS / Tobit | β = +0.005, p = 0.075 / 0.092 | `stage5_did.py` |
-| Parallel-trends F | F = 1.031, p = 0.385 | `stage5_did.py` |
-| Markov homogeneity | p = 0.697 (3-state), 0.170 (4-state) | `dynamics_analysis.py` |
-| Birth–death utilization | ρ = 1.52 (pre) vs 1.56 (post); Δρ 95% CI [−0.86, +1.96] | `dynamics_analysis.py` |
-| Tail DiD reversal | naive pooled p = 0.003 → DiD interaction p = 0.224 | `dynamics_analysis.py` |
-| Cluster-aware power | 0.24 / 0.44 / 0.69 / 0.88 / 0.97 / 1.00 at +15…+100% | `analysis/reviewer_analyses.py` |
-| Negative-control bootstrap | exceedance 0.609 (CI of LR [5.25, 35.95]) | `analysis/negcontrol_clustered.py` |
-| Krippendorff's α | 0.870, 95% CI [0.776, 0.923]; pooled ρ = 0.733 | `validation/analyze_raters.py` |
-
----
-
-## Citation
-
-```bibtex
-@misc{sharma2026distributional,
-  title  = {When Distributional Findings Deceive: A Methodology for Dynamic
-            Analysis of Clustered Software Panels, Demonstrated on the
-            AI-Accessibility Question},
-  author = {Sharma, Somil},
-  year   = {2026},
-  note   = {Replication package},
-  doi    = {10.5281/zenodo.20994931}
-}
+```bash
+python analysis/build_enriched_panel.py   # rebuilds data/enriched_panel*.csv
 ```
 
----
+## Citing
 
-## License
-
-- **Code** — MIT (see `LICENSE`).
-- **Data** — CC BY 4.0 (see `LICENSE-data`): `panel.csv`, all `data/*.csv`,
-  `validation/*.csv`, regenerated `dynamics_out/*.csv`, and `repos.db` on Zenodo.
-
-Component source files referenced in `validation/components.csv` remain under
-their upstream open-source licenses; only the derived scores/ratings here are
-CC BY 4.0.
+See `CITATION.cff`. Code is released under the MIT License (`LICENSE`); the data files are
+released under CC BY 4.0 (`LICENSE-data`). The Zenodo concept DOI
+[10.5281/zenodo.20994931](https://doi.org/10.5281/zenodo.20994931) resolves to the latest
+archived version.

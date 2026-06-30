@@ -8,15 +8,14 @@ Creative Commons Attribution 4.0 International License (CC BY 4.0).
 
 This data license applies to:
 
-  - panel.csv
-  - data/file_diffs.csv
-  - data/matched_pairs.csv
-  - data/treatment_dates.csv
-  - data/psm_diagnostics.csv
-  - data/axe_violations_detail.csv
-  - validation/ratings.csv
-  - validation/components.csv
-  - dynamics_out/*.csv (when regenerated)
+  - data/enriched_panel.csv
+  - data/enriched_panel_full.csv
+  - data/enriched_matches.csv
+  - data/enriched_results_matched.csv
+  - data/enriched_results_full.csv
+  - data/enriched_dynamics.json
+  - data/ratings.csv
+  - any *.csv / *.json regenerated under data/ by run_all.sh
   - the full repos.db database archived on Zenodo
 
 You are free to:
@@ -28,13 +27,14 @@ Under the following terms:
   - Attribution — You must give appropriate credit, provide a link to the
     license, and indicate if changes were made. Cite:
 
-      Sharma, S. (2026). When Distributional Findings Deceive: A Methodology
-      for Dynamic Analysis of Clustered Software Panels, Demonstrated on the
-      AI-Accessibility Question. Replication package.
+      Sharma, S. (2026). No Detectable Accessibility Regression from AI
+      Coding-Tool Adoption: A Bounded Null from 446 React/TypeScript
+      Repositories under Staggered Difference-in-Differences. Replication
+      package.
 
 The full legal text of CC BY 4.0 is available at:
   https://creativecommons.org/licenses/by/4.0/legalcode
 
-The component source files referenced in validation/components.csv remain under
-the licenses of their respective upstream open-source projects; only the derived
-scores and ratings in this package are released under CC BY 4.0.
+The component source files referenced in the construct-validation ratings remain
+under the licenses of their respective upstream open-source projects; only the
+derived scores and ratings in this package are released under CC BY 4.0.

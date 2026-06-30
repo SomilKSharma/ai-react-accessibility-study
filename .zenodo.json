@@ -1,6 +1,6 @@
 {
-  "title": "When Distributional Findings Deceive: A Methodology for Dynamic Analysis of Clustered Software Panels, Demonstrated on the AI-Accessibility Question — Replication Package",
-  "description": "Replication package for the merged manuscript: mean-effect DiD analysis (stage5_did.py, panel.csv), stochastic-dynamics analysis (dynamics_analysis.py over file-level diffs), and the four-rater construct-validation of the AST semantic score (validation/). repos.db (the full SQLite source database) is archived alongside this record. Code is MIT-licensed; data files (panel.csv and the derived data/ CSVs) are CC BY 4.0.",
+  "title": "No Detectable Accessibility Regression from AI Coding-Tool Adoption: A Bounded Null from 446 React/TypeScript Repositories under Staggered Difference-in-Differences — Replication Package",
+  "description": "Replication package for the manuscript. A staggered difference-in-differences study of whether AI coding-tool adoption (Cursor, GitHub Copilot) degrades the source-detectable web accessibility of React/TypeScript repositories, over 446 repositories and 13,702 repo-months (a propensity-matched 181-repo subset as the primary identification panel). The package contains: the render-independent TypeScript-AST accessibility analyzer (analysis/a11y_analyzer.js); the panel-construction and propensity-matching pipeline (analysis/build_enriched_panel.py, analysis/stage4_scale.py); the mean-effect, equivalence (TOST), wild-cluster-bootstrap and multiplicity estimators (analysis/estimate_enriched.py, analysis/multiplicity.py); the beyond-mean dynamics battery -- zero-inflation, Markov homogeneity, persistence/spectral-gap, volatility, tail-DiD (analysis/enriched_dynamics.py); supporting simulations (size_distortion_sim.py, utilization_refutation_sim.py, result2_simulation.py); the multi-rater construct validation (analysis/raters_3independent.py); the shipped enriched panels and result files (data/); the manuscript figures (figures/); and the paper itself (paper/). Run ./run_all.sh to regenerate every table and figure from the shipped data. The full SQLite source database (repos.db) is archived alongside this record and is only needed to rebuild the panels from scratch. Code is MIT-licensed; data files are CC BY 4.0.",
   "upload_type": "software",
   "creators": [
     {
@@ -10,14 +10,15 @@
   ],
   "keywords": [
     "empirical software engineering",
-    "difference-in-differences",
-    "clustered inference",
-    "distributional treatment effects",
-    "Markov chains",
-    "birth-death processes",
     "AI-assisted development",
     "web accessibility",
-    "null results"
+    "difference-in-differences",
+    "staggered adoption",
+    "clustered inference",
+    "equivalence testing",
+    "null results",
+    "distributional treatment effects",
+    "zero-inflation"
   ],
   "access_right": "open"
 }
